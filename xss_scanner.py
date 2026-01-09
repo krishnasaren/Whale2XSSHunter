@@ -47,141 +47,31 @@ import inspect
 import itertools
 import functools
 
-# ============================================================================
-# THIRD-PARTY IMPORTS WITH PROPER HANDLING
-# ============================================================================
-
-try:
-    import requests
-    from requests.adapters import HTTPAdapter
-    from requests.packages.urllib3.util.retry import Retry
-    from requests.exceptions import RequestException
-    REQUESTS_AVAILABLE = True
-except ImportError:
-    REQUESTS_AVAILABLE = False
-
-try:
-    from bs4 import BeautifulSoup
-    BS4_AVAILABLE = True
-except ImportError:
-    BS4_AVAILABLE = False
-
-try:
-    import tldextract
-    TLDEXTRACT_AVAILABLE = True
-except ImportError:
-    TLDEXTRACT_AVAILABLE = False
-
-try:
-    from selenium import webdriver
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.chrome.options import Options as ChromeOptions
-    from selenium.webdriver.firefox.options import Options as FirefoxOptions
-    from selenium.common.exceptions import WebDriverException,TimeoutException
-    SELENIUM_AVAILABLE = True
-except ImportError:
-    SELENIUM_AVAILABLE = False
-
-try:
-    import dukpy
-    DUKPY_AVAILABLE = True
-except ImportError:
-    DUKPY_AVAILABLE = False
-
-try:
-    from py_mini_racer import MiniRacer
-    MINIRACER_AVAILABLE = True
-except ImportError:
-    MINIRACER_AVAILABLE = False
-
-try:
-    import aiohttp
-    import aiofiles
-    AIOHTTP_AVAILABLE = True
-except ImportError:
-    AIOHTTP_AVAILABLE = False
-
-try:
-    import jinja2
-    JINJA2_AVAILABLE = True
-except ImportError:
-    JINJA2_AVAILABLE = False
-
-try:
-    import colorama
-    from colorama import Fore, Back, Style
-    COLORAMA_AVAILABLE = True
-except ImportError:
-    COLORAMA_AVAILABLE = False
-
-try:
-    import yaml
-    YAML_AVAILABLE = True
-except ImportError:
-    YAML_AVAILABLE = False
-
-try:
-    import whois
-    WHOIS_AVAILABLE = True
-except ImportError:
-    WHOIS_AVAILABLE = False
-
-try:
-    import dns.resolver
-    DNS_AVAILABLE = True
-except ImportError:
-    DNS_AVAILABLE = False
+#-------------------------------
 
 # Auto-install missing dependencies
 def install_missing_dependencies():
     """Install missing dependencies automatically"""
-    dependencies = []
-
-    if not REQUESTS_AVAILABLE:
-        dependencies.append("requests")
-
-    if not BS4_AVAILABLE:
-        dependencies.append("beautifulsoup4")
-
-    if not TLDEXTRACT_AVAILABLE:
-        dependencies.append("tldextract")
-
-    if not SELENIUM_AVAILABLE:
-        dependencies.append("selenium")
-
-    if not DUKPY_AVAILABLE:
-        dependencies.append("dukpy")
-
-    if not MINIRACER_AVAILABLE:
-        dependencies.append("py_mini_racer")
-
-    if not AIOHTTP_AVAILABLE:
-        dependencies.extend(["aiohttp", "aiofiles"])
-
-    if not JINJA2_AVAILABLE:
-        dependencies.append("jinja2")
-
-    if not COLORAMA_AVAILABLE:
-        dependencies.append("colorama")
-
-    if not YAML_AVAILABLE:
-        dependencies.append("pyyaml")
-
-    if not WHOIS_AVAILABLE:
-        dependencies.append("python-whois")
-
-    if not DNS_AVAILABLE:
-        dependencies.append("dnspython")
+    dependencies = ["requests", "beautifulsoup4", "tldextract", "selenium", "dukpy", "py_mini_racer", "jinja2",
+                    "colorama", "pyyaml", "python-whois", "dnspython","aiohttp", "aiofiles"]
 
     if dependencies:
         print(f"[*] Installing missing dependencies: {', '.join(dependencies)}")
         try:
-            subprocess.check_call([sys.executable, "-m", "pip", "install"] + dependencies + ["--quiet"])
+            #subprocess.check_call([sys.executable, "-m", "pip", "install"] + dependencies + ["--quiet"])
+            subprocess.check_call(
+                [
+                    sys.executable, "-m", "pip", "install",
+                    "--quiet", "--quiet",
+                    "--disable-pip-version-check",
+                    "--no-input",
+                    "--progress-bar", "off",
+                ] + dependencies
+            )
+
             print("[✓] Dependencies installed successfully!")
-            print("[*] Please restart the scanner.")
-            sys.exit(0)
+            print("[*] Please restart the scanner.[if any issue]")
+            #sys.exit(0)
         except subprocess.CalledProcessError as e:
             print(f"[!] Failed to install dependencies: {e}")
             sys.exit(1)
@@ -194,6 +84,56 @@ import tldextract
 import colorama
 from colorama import Fore, Back, Style
 colorama.init()
+
+
+
+
+#--------------necessary for buld executable file
+
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+from requests.exceptions import RequestException
+from bs4 import BeautifulSoup
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.common.exceptions import WebDriverException,TimeoutException
+
+import tldextract
+import dukpy
+import jinja2
+import aiohttp
+import aiofiles
+import colorama
+from colorama import Fore, Back, Style
+from py_mini_racer import MiniRacer
+import whois
+import dns.resolver
+import yaml
+
+
+#-----------------
+REQUESTS_AVAILABLE = True
+BS4_AVAILABLE = True
+TLDEXTRACT_AVAILABLE = True
+SELENIUM_AVAILABLE = True
+DUKPY_AVAILABLE = True
+MINIRACER_AVAILABLE = True
+AIOHTTP_AVAILABLE = True
+JINJA2_AVAILABLE = True
+COLORAMA_AVAILABLE = True
+YAML_AVAILABLE = True
+WHOIS_AVAILABLE = True
+DNS_AVAILABLE = True
+
+
+
+#----------------
 
 # ============================================================================
 # ADVANCED CONFIGURATION WITH VALIDATION
