@@ -14,7 +14,7 @@
         frame-ancestors 'none';
       ">
 
-    <title>XSS Scan Report - xss_20260107_150808_6cfdc350</title>
+    <title>XSS Scan Report - xss_20260108_145712_3552b6f8</title>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -317,20 +317,20 @@
     <div class="container">
         <div class="header">
             <h1>XSS Vulnerability Scan Report</h1>
-            <p class="subtitle">Scan ID: xss_20260107_150808_6cfdc350 | Target: http://localhost/login.php | Generated: 2026-01-07 15:08:19</p>
+            <p class="subtitle">Scan ID: xss_20260108_145712_3552b6f8 | Target: http://localhost/xs.php | Generated: 2026-01-08 14:57:29</p>
         </div>
 
         <div class="summary-cards">
-            <div class="summary-card ">
+            <div class="summary-card critical">
                 <div class="card-title">Risk Level</div>
-                <div class="card-value">INFO</div>
-                <div class="card-subtitle">Score: 0.0/100</div>
+                <div class="card-value">CRITICAL</div>
+                <div class="card-subtitle">Score: 100.0/100</div>
             </div>
 
             <div class="summary-card">
                 <div class="card-title">Total Vulnerabilities</div>
-                <div class="card-value">0</div>
-                <div class="card-subtitle">0 verified</div>
+                <div class="card-value">2</div>
+                <div class="card-subtitle">2 verified</div>
             </div>
 
             <div class="summary-card critical">
@@ -341,13 +341,13 @@
 
             <div class="summary-card high">
                 <div class="card-title">High</div>
-                <div class="card-value">0</div>
+                <div class="card-value">2</div>
                 <div class="card-subtitle">Address as soon as possible</div>
             </div>
             <div class="summary-card medium">
-                <div class="card-title">High</div>
+                <div class="card-title">Medium</div>
                 <div class="card-value">0</div>
-                <div class="card-subtitle">Look into this</div>
+                <div class="card-subtitle">Need to be addressed</div>
             </div>
             <div class="summary-card low">
                 <div class="card-title">Low</div>
@@ -359,9 +359,9 @@
 
                 <div class="section">
                     <h2 class="section-title">Executive Summary</h2>
-                    <p><strong>Scan Duration:</strong> 6.03 seconds</p>
+                    <p><strong>Scan Duration:</strong> 9.96 seconds</p>
                     <p><strong>Pages Scanned:</strong> 1</p>
-                    <p><strong>Total Requests:</strong> 98</p>
+                    <p><strong>Total Requests:</strong> 5</p>
                     <p><strong>Technologies Detected:</strong> 5</p>
                     <p><strong>WAF Detected:</strong> No</p>
                     <p><strong>CSP Enabled:</strong> No</p>
@@ -369,8 +369,137 @@
 
                 
                 <div class="section">
-                    <h2 class="section-title">No Vulnerabilities Found</h2>
-                    <p>No XSS vulnerabilities were detected during this scan.</p>
+                    <h2 class="section-title">Vulnerabilities (2)</h2>
+
+                    
+                    <div class="vulnerability-card high">
+                        <div class="vuln-header">
+                            <div class="vuln-title">
+                                STORED XSS - comment
+                                
+                                <span style="color: var(--success-color); margin-left: 10px;">✓ Verified</span>
+                                
+                            </div>
+                            <div class="severity-badge severity-high">
+                                HIGH
+                            </div>
+                        </div>
+
+                        <div class="vuln-details">
+                            <div class="detail-row">
+                                <div class="detail-label">URL:</div>
+                                <div class="detail-value">http://localhost/xs.php</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Method:</div>
+                                <div class="detail-value">POST</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Parameter:</div>
+                                <div class="detail-value">comment</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Payload:</div>
+                                <div class="detail-value">
+                                    <pre class="code-block"><code>&lt;script&gt;ls&lt;/script&gt;__XSSSTORED_stored_1767864439_65164e__</code></pre>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Confidence:</div>
+                                <div class="detail-value">90.0%</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">CVSS Score:</div>
+                                <div class="detail-value">5.3/10 (CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N)</div>
+                            </div>
+                        </div>
+
+                        <div class="collapsible">
+                            <!--old inside collapsible-header onclick="this.parentElement.classList.toggle('active')"-->
+                            <div class="collapsible-header">
+                                <span>Show Details</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="collapsible-content">
+                                <pre class="code-block"><code>Persistent marker detected: &lt;script&gt;ls&lt;/script&gt;__XSSSTORED_stored_1767864439_65164e__</code></pre>
+
+                                
+                                <p><strong>cURL Proof of Concept:</strong></p>
+                                <pre class="code-block"><code>curl -X POST &quot;http://localhost/xs.php&quot;</code></pre>
+                                
+
+                                
+                                <p><strong>Context:</strong></p>
+                                <pre class="code-block"><code>{&#x27;storage_verified&#x27;: True, &#x27;marker&#x27;: &#x27;&lt;script&gt;ls&lt;/script&gt;__XSSSTORED_stored_1767864439_65164e__&#x27;, &#x27;source_page&#x27;: &#x27;http://localhost/xs.php&#x27;}</code></pre>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="vulnerability-card high">
+                        <div class="vuln-header">
+                            <div class="vuln-title">
+                                STORED XSS - email
+                                
+                                <span style="color: var(--success-color); margin-left: 10px;">✓ Verified</span>
+                                
+                            </div>
+                            <div class="severity-badge severity-high">
+                                HIGH
+                            </div>
+                        </div>
+
+                        <div class="vuln-details">
+                            <div class="detail-row">
+                                <div class="detail-label">URL:</div>
+                                <div class="detail-value">http://localhost/xs.php</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Method:</div>
+                                <div class="detail-value">POST</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Parameter:</div>
+                                <div class="detail-value">email</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Payload:</div>
+                                <div class="detail-value">
+                                    <pre class="code-block"><code>&lt;script&gt;ls&lt;/script&gt;__XSSSTORED_stored_1767864439_65164e__</code></pre>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Confidence:</div>
+                                <div class="detail-value">90.0%</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">CVSS Score:</div>
+                                <div class="detail-value">5.3/10 (CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N)</div>
+                            </div>
+                        </div>
+
+                        <div class="collapsible">
+                            <!--old inside collapsible-header onclick="this.parentElement.classList.toggle('active')"-->
+                            <div class="collapsible-header">
+                                <span>Show Details</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="collapsible-content">
+                                <pre class="code-block"><code>Persistent marker detected: &lt;script&gt;ls&lt;/script&gt;__XSSSTORED_stored_1767864439_65164e__</code></pre>
+
+                                
+                                <p><strong>cURL Proof of Concept:</strong></p>
+                                <pre class="code-block"><code>curl -X POST &quot;http://localhost/xs.php&quot;</code></pre>
+                                
+
+                                
+                                <p><strong>Context:</strong></p>
+                                <pre class="code-block"><code>{&#x27;storage_verified&#x27;: True, &#x27;marker&#x27;: &#x27;&lt;script&gt;ls&lt;/script&gt;__XSSSTORED_stored_1767864439_65164e__&#x27;, &#x27;source_page&#x27;: &#x27;http://localhost/xs.php&#x27;}</code></pre>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
                 
 
@@ -388,25 +517,16 @@
                                 <h3 style="margin-bottom: 10px; color: var(--text-primary);">Servers</h3>
                                 <ul style="list-style: none; padding: 0;">
                                     
-                                    <li style="padding: 5px 0; border-bottom: 1px solid #d1d5db;">Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12</li>
-                                    
                                     <li style="padding: 5px 0; border-bottom: 1px solid #d1d5db;">Web Apache</li>
                                     
+                                    <li style="padding: 5px 0; border-bottom: 1px solid #d1d5db;">Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12</li>
+                                    
                                 </ul>
                             </div>
                             
                         
                             
                         
-                            
-                            <div style="background: #e5e7eb; padding: 15px; border-radius: 6px; flex: 1; min-width: 200px;">
-                                <h3 style="margin-bottom: 10px; color: var(--text-primary);">Security</h3>
-                                <ul style="list-style: none; padding: 0;">
-                                    
-                                    <li style="padding: 5px 0; border-bottom: 1px solid #d1d5db;">Has Security Headers</li>
-                                    
-                                </ul>
-                            </div>
                             
                         
                     </div>

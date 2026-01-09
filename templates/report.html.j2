@@ -430,7 +430,7 @@
 
                                 {% if vuln.context %}
                                 <p><strong>Context:</strong></p>
-                                <pre class="code-block"><code>{{ vuln.context | tojson(indent=2) | safe_text }}</code></pre>
+                                <pre class="code-block"><code>{{ vuln.context | safe_text }}</code></pre>
                                 {% endif %}
                             </div>
                         </div>

@@ -1,0 +1,1 @@
+2026-01-08 15:10:50,283 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ReadTimeoutError("HTTPConnectionPool(host='testphp.vulnweb.com', port=80): Read timed out. (read timeout=15)")': /search.php?test=query

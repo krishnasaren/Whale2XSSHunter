@@ -1,0 +1,1 @@
+2026-01-08 12:40:56,194 - ProfessionalXSSScanner.ReportGenerator - ERROR - Failed to generate HTML report: No filter named 'safe_text'.

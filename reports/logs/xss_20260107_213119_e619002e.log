@@ -1,0 +1,2 @@
+2026-01-07 21:36:20,376 - selenium.webdriver.common.selenium_manager - WARNING - There was an error managing chromedriver (error decoding response body); using driver found in the cache
+2026-01-07 21:36:20,376 - selenium.webdriver.common.selenium_manager - WARNING - Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
