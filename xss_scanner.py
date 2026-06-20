@@ -18,6 +18,9 @@ Features:
 import os
 import re
 import sys
+import subprocess
+import importlib
+import platform
 import json
 import time
 import random
@@ -51,39 +54,149 @@ import functools
 
 # Auto-install missing dependencies
 def install_missing_dependencies():
-    """Install missing dependencies automatically"""
-    dependencies = ["requests", "beautifulsoup4", "tldextract", "selenium", "dukpy", "py_mini_racer", "jinja2",
-                    "colorama", "pyyaml", "python-whois", "dnspython","aiohttp", "aiofiles"]
+    """
+    Automatically install only missing dependencies.
 
-    if dependencies:
-        print(f"[*] Installing missing dependencies: {', '.join(dependencies)}")
+    Features:
+    - Checks before installing
+    - Supports Kali/Debian
+    - Retries with --ignore-installed
+    - Clear error reporting
+    - Safe for repeated execution
+    """
+
+    required_modules = {
+        "requests": "requests",
+        "bs4": "beautifulsoup4",
+        "tldextract": "tldextract",
+        "selenium": "selenium",
+        "dukpy": "dukpy",
+        "py_mini_racer": "py_mini_racer",
+        "jinja2": "jinja2",
+        "colorama": "colorama",
+        "yaml": "pyyaml",
+        "whois": "python-whois",
+        "dns": "dnspython",
+        "aiohttp": "aiohttp",
+        "aiofiles": "aiofiles"
+    }
+
+    missing = []
+
+    print("[*] Checking dependencies...")
+
+    for module_name, package_name in required_modules.items():
+
         try:
-            #subprocess.check_call([sys.executable, "-m", "pip", "install"] + dependencies + ["--quiet"])
+            importlib.import_module(module_name)
+
+        except ImportError:
+            missing.append(package_name)
+
+    if not missing:
+        print("[✓] All dependencies are already installed.")
+        return
+
+    print(
+        "[*] Missing dependencies: {}".format(
+            ", ".join(missing)
+        )
+    )
+
+    install_cmd = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "--disable-pip-version-check",
+        "--no-input",
+        "--progress-bar",
+        "off"
+    ]
+
+    if platform.system() == "Linux":
+        install_cmd.append("--break-system-packages")
+
+    try:
+
+        print("[*] Installing packages...")
+
+        subprocess.check_call(
+            install_cmd + missing
+        )
+
+        print("[✓] Dependencies installed successfully.")
+
+    except subprocess.CalledProcessError:
+
+        print(
+            "[!] Standard installation failed."
+        )
+
+        print(
+            "[*] Retrying with "
+            "--ignore-installed ..."
+        )
+
+        try:
+
             subprocess.check_call(
-                [
-                    sys.executable, "-m", "pip", "install",
-                    "--break-system-packages",
-                    "--disable-pip-version-check",
-                    "--no-input",
-                    "--progress-bar", "off",
-                ] + dependencies
+                install_cmd +
+                ["--ignore-installed"] +
+                missing
             )
 
-            print("[✓] Dependencies installed successfully!")
-            print("[*] Please restart the scanner.[if any issue]")
-            #sys.exit(0)
+            print(
+                "[✓] Dependencies installed successfully."
+            )
+
         except subprocess.CalledProcessError as e:
-            print(f"[!] Failed to install dependencies: {e}")
+
+            print(
+                "\n[!] Dependency installation failed."
+            )
+
+            print(
+                "[!] Error: {}".format(e)
+            )
+
+            print(
+                "\nPossible causes:"
+            )
+
+            print(
+                "  - No internet connection"
+            )
+
+            print(
+                "  - PyPI unavailable"
+            )
+
+            print(
+                "  - Unsupported Python version"
+            )
+
+            print(
+                "  - Missing compiler/build tools"
+            )
+
+            print(
+                "  - Distribution package conflict"
+            )
+
             sys.exit(1)
 
-# Check and install dependencies
+# ============================================================
+# Run dependency check
+# ============================================================
+
 install_missing_dependencies()
 
 # Re-import after installation
 import tldextract
 import colorama
 from colorama import Fore, Back, Style
-colorama.init()
+colorama.init(autoreset=True)
 
 
 
@@ -115,6 +228,8 @@ from py_mini_racer import MiniRacer
 import whois
 import dns.resolver
 import yaml
+
+print("[✓] All modules loaded successfully.")
 
 
 #-----------------
