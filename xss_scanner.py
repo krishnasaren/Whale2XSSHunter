@@ -203,7 +203,7 @@ def install_missing_dependencies():
                 "  - Distribution package conflict"
             )
 
-            sys.exit(1)
+            exit_with_pause(1)
 
 
 # ============================================================
@@ -5861,6 +5861,11 @@ class ProfessionalXSSScanner:
                 print()
 
 
+def exit_with_pause(code: int):
+    if getattr(sys, "frozen", False):  # running as EXE
+        input("\nScan finished. Press Enter to exit...")
+    sys.exit(code)
+
 # ============================================================================
 # COMMAND LINE INTERFACE
 # ============================================================================
@@ -5901,7 +5906,7 @@ For more information, visit: https://github.com/professional-xss-scanner
     )
 
     # Required
-    parser.add_argument("url", help="Target URL to scan")
+    parser.add_argument("url", nargs="?", default=None, help="Target URL to scan")
 
     # Scan Modes
     scan_mode = parser.add_mutually_exclusive_group()
@@ -5976,6 +5981,14 @@ For more information, visit: https://github.com/professional-xss-scanner
                         help="Load configuration from YAML file")
 
     args = parser.parse_args()
+
+    if not args.url:
+        print("\n[!] No URL provided.")
+        args.url = input("Enter target URL: ").strip()
+
+        if not args.url:
+            print("No URL given. Exiting...")
+            exit_with_pause(0)
 
     # Create configuration
     config = ScannerConfig(target_url=args.url)
@@ -6103,7 +6116,7 @@ For more information, visit: https://github.com/professional-xss-scanner
                         setattr(config, key, value)
         except Exception as e:
             print(f"Error loading config file: {e}")
-            sys.exit(1)
+            exit_with_pause(1)
 
     # Create and run scanner
     try:
@@ -6115,23 +6128,25 @@ For more information, visit: https://github.com/professional-xss-scanner
         high_count = len([v for v in result.vulnerabilities if v.severity == 'high'])
 
         if critical_count > 0:
-            sys.exit(3)  # Critical vulnerabilities
+            exit_with_pause(3)  # Critical vulnerabilities
         elif high_count > 0:
-            sys.exit(2)  # High vulnerabilities
+            exit_with_pause(2)  # High vulnerabilities
         elif result.vulnerabilities_found > 0:
-            sys.exit(1)  # Other vulnerabilities
+            exit_with_pause(1)  # Other vulnerabilities
         else:
-            sys.exit(0)  # No vulnerabilities
+            exit_with_pause(0)  # No vulnerabilities
 
     except KeyboardInterrupt:
         print("\nScan interrupted by user")
-        sys.exit(130)
+        exit_with_pause(130)
     except Exception as e:
         print(f"\nFatal error: {e}")
         if config.debug:
             import traceback
             traceback.print_exc()
-        sys.exit(1)
+        input("Press Enter to exit...")
+        exit_with_pause(1)
+
 
 
 # ============================================================================
@@ -6141,16 +6156,19 @@ For more information, visit: https://github.com/professional-xss-scanner
 if __name__ == "__main__":
     try:
         main()
+        # keep window open in EXE mode
+        if getattr(sys, "frozen", False):  # running as EXE
+            input("\nScan completed. Press Enter to exit...")
     except KeyboardInterrupt:
         print("\n\nInterrupted by user")
-        sys.exit(130)
+        exit_with_pause(100)
 
 # --------------------------------------
 # NOTE
 # ------------------------------------
 
 
-# [:limit] are set by default for securit and resource in scanner search "limit" ctrl+f
+# [:limit] are set by default for securit and resource in scanner search limit ctrl+f
 # so please adjust this accordingly
 
 
