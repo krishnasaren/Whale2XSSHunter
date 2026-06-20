@@ -2,30 +2,36 @@
 
 clear
 
-echo "=================================================="
-echo "         Whale2XSSHunter Launcher"
-echo "=================================================="
+echo "==========================================="
+echo "        Whale2XSSHunter Launcher"
+echo "==========================================="
 echo
+
+if command -v python3 >/dev/null 2>&1; then
+    PYTHON=python3
+elif command -v python >/dev/null 2>&1; then
+    PYTHON=python
+else
+    echo "[!] Python not found."
+    exit 1
+fi
 
 if [ ! -d "venv" ]; then
     echo "[*] Creating virtual environment..."
-    python3 -m venv venv
+    $PYTHON -m venv venv
 fi
 
 source venv/bin/activate
 
 echo "[*] Upgrading pip..."
-python -m pip install --upgrade pip --quiet
+$PYTHON -m pip install --upgrade pip
 
 echo "[*] Installing requirements..."
-pip install -r requirements.txt
+$PYTHON -m pip install -r requirements.txt
 
 echo
 echo "[✓] Environment Ready"
-echo
-echo "=================================================="
-echo "            Starting Scanner"
-echo "=================================================="
+echo "[*] Starting Whale2XSSHunter..."
 echo
 
-python xss_scanner.py "$@"
+$PYTHON xss_scanner.py "$@"
