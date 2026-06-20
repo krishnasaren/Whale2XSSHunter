@@ -50,8 +50,7 @@ import inspect
 import itertools
 import functools
 
-
-#--------BANNER
+# --------BANNER
 BANNER = r"""
 
 ██╗    ██╗██╗  ██╗ █████╗ ██╗     ███████╗██████╗ ██╗  ██╗
@@ -69,7 +68,8 @@ BANNER = r"""
 
 print(BANNER)
 
-#-------------------------------
+
+# -------------------------------
 
 # Auto-install missing dependencies
 def install_missing_dependencies():
@@ -205,6 +205,7 @@ def install_missing_dependencies():
 
             sys.exit(1)
 
+
 # ============================================================
 # Run dependency check
 # ============================================================
@@ -215,12 +216,10 @@ install_missing_dependencies()
 import tldextract
 import colorama
 from colorama import Fore, Back, Style
+
 colorama.init(autoreset=True)
 
-
-
-
-#--------------necessary for buld executable file
+# --------------necessary for buld executable file
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -234,7 +233,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.common.exceptions import WebDriverException,TimeoutException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 
 import tldextract
 import dukpy
@@ -251,8 +250,7 @@ import yaml
 print("[✓] All modules loaded successfully.")
 print(f"{Fore.YELLOW}[*] WARMUP: Some Libraries Need Online Updates ! HOLD ON..{Style.RESET_ALL}")
 
-
-#-----------------
+# -----------------
 REQUESTS_AVAILABLE = True
 BS4_AVAILABLE = True
 TLDEXTRACT_AVAILABLE = True
@@ -267,8 +265,7 @@ WHOIS_AVAILABLE = True
 DNS_AVAILABLE = True
 
 
-
-#----------------
+# ----------------
 
 # ============================================================================
 # ADVANCED CONFIGURATION WITH VALIDATION
@@ -282,7 +279,8 @@ class ScannerConfig:
     target_url: str
 
     # Identity
-    scan_id: str = field(default_factory=lambda: f"xss_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}")
+    scan_id: str = field(
+        default_factory=lambda: f"xss_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}")
     scanner_name: str = "ProfessionalXSSScanner"
     version: str = "4.0"
 
@@ -293,7 +291,7 @@ class ScannerConfig:
     max_links_per_page: int = 100
     request_timeout: int = 15
     request_delay: float = 0.1
-    max_retries: int = 3
+    max_retries: int = 1
     connection_pool_size: int = 50
 
     # Scanning Modes
@@ -402,9 +400,9 @@ class ScannerConfig:
 
         # Extract domain info
         self.extracted = tldextract.extract(self.target_url)
-        self.domain = self.extracted.fqdn #hostname maybe with subdomain if target url is subdomain example a.b.com => a.b.com
-        self.subdomain = self.extracted.subdomain #a
-        #self.full_domain = f"{self.subdomain}.{self.domain}" if self.subdomain else self.domain
+        self.domain = self.extracted.fqdn  # hostname maybe with subdomain if target url is subdomain example a.b.com => a.b.com
+        self.subdomain = self.extracted.subdomain  # a
+        # self.full_domain = f"{self.subdomain}.{self.domain}" if self.subdomain else self.domain
         self.full_domain = self.domain
 
         # Set OOB domain if not provided
@@ -457,6 +455,11 @@ class ScannerConfig:
 
     def _setup_logging(self):
         """Setup advanced logging"""
+        #urlib3
+        logging.getLogger("urllib3").setLevel(logging.ERROR)
+        urllib
+
+
         log_dir = os.path.join(self.output_dir, "logs")
         os.makedirs(log_dir, exist_ok=True)
 
@@ -509,6 +512,7 @@ class ScannerConfig:
 
         return True
 
+
 # ============================================================================
 # ADVANCED DATA STRUCTURES
 # ============================================================================
@@ -528,7 +532,6 @@ class Vulnerability:
     # Scoring
     confidence: float
     severity: str  # critical, high, medium, low, info
-
 
     # Evidence
     evidence: str
@@ -672,6 +675,7 @@ else:
 
         return self.cvss_score
 
+
 @dataclass
 class PageInfo:
     """Comprehensive page information"""
@@ -730,6 +734,7 @@ class PageInfo:
             'scripts_count': len(self.scripts),
             'technologies': self.technologies,
         }
+
 
 @dataclass
 class ScanResult:
@@ -817,6 +822,7 @@ class ScanResult:
 
         return summary
 
+
 # ============================================================================
 # ADVANCED HTTP CLIENT WITH INTELLIGENCE
 # ============================================================================
@@ -890,6 +896,7 @@ class AdvancedHTTPClient:
         if not self.config.verify_ssl:
             import urllib3
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            urllib3.disable_warnings()#disable any urlib3 warning
 
         # Set headers
         if self.config.user_agent_rotation:
@@ -919,9 +926,9 @@ class AdvancedHTTPClient:
         # Prepare request
         kwargs.setdefault('timeout', self.config.request_timeout)
         kwargs.setdefault('allow_redirects', self.config.follow_redirects)
-        #------------------------
-        #kwargs.setdefault('max_redirects', self.config.max_redirects)
-        #---------------------------
+        # ------------------------
+        # kwargs.setdefault('max_redirects', self.config.max_redirects)
+        # ---------------------------
         kwargs.setdefault('verify', self.config.verify_ssl)
 
         # Check cache
@@ -1027,6 +1034,7 @@ class AdvancedHTTPClient:
         """HTTP OPTIONS request"""
         return self.request('OPTIONS', url, **kwargs)
 
+
 class RateLimiter:
     """Intelligent rate limiter"""
 
@@ -1050,6 +1058,7 @@ class RateLimiter:
                 time.sleep(sleep_time)
 
             self.last_request_time = time.time()
+
 
 # ============================================================================
 # ADVANCED CRAWLER WITH TLDeXTRACT
@@ -1091,9 +1100,9 @@ class ProfessionalCrawler:
         if config.parse_sitemap:
             self._parse_sitemap()
 
-        #=============
+        # =============
         self.visited_lock = threading.Lock()
-        #==================
+        # ==================
 
     def _extract_domain(self, url: str) -> str:
         """
@@ -1334,7 +1343,8 @@ class ProfessionalCrawler:
 
                 # Progress update
                 if not self.config.quiet and len(self.visited) % 10 == 0:
-                    print(f"{Fore.YELLOW}[*] Progress: {len(self.visited)} pages crawled, {len(self.discovered)} discovered{Style.RESET_ALL}")
+                    print(
+                        f"{Fore.YELLOW}[*] Progress: {len(self.visited)} pages crawled, {len(self.discovered)} discovered{Style.RESET_ALL}")
 
         # Final statistics
         if not self.config.quiet:
@@ -1345,7 +1355,7 @@ class ProfessionalCrawler:
 
     def _crawl_page(self, url: str, depth: int) -> Optional[PageInfo]:
         """Crawl a single page (thread-safe, policy-correct)"""
-        print("Collecting Data.. :", url)
+        #print("Collecting Data.. :", url)
 
         try:
             # --------------------------------------------------
@@ -1360,7 +1370,7 @@ class ProfessionalCrawler:
             # Step 2: robots.txt policy check
             # --------------------------------------------------
 
-            #skip these then easy to find hidden truth
+            # skip these then easy to find hidden truth
             '''if self.robots_rules and not self._check_robots_rules(url):
                 self.stats['urls_filtered'] += 1
                 self.logger.debug(f"Blocked by robots.txt: {url}")
@@ -1396,14 +1406,14 @@ class ProfessionalCrawler:
                 )
                 return None
 
-            #-------------------------
-            #-----ONLY FOR html otherwise it generate Collecting Data.. : http://localhost/icon/site.webmanifest
+            # -------------------------
+            # -----ONLY FOR html otherwise it generate Collecting Data.. : http://localhost/icon/site.webmanifest
             content_type = response.headers.get("Content-Type", "").lower()
 
             if "text/html" not in content_type:
                 return None
 
-            #------------------------
+            # ------------------------
 
             # --------------------------------------------------
             # Step 6: Parse page
@@ -1572,7 +1582,7 @@ class ProfessionalCrawler:
             ('source', 'src'),
             ('track', 'src'),
             ('object', 'data'),
-            #('meta', 'content'),  # For refresh, canonical, etc.
+            # ('meta', 'content'),  # For refresh, canonical, etc.
         ]
 
         for tag_name, attr in tag_attrs:
@@ -1848,19 +1858,19 @@ class ProfessionalCrawler:
             'kill',
         ]
         '''
-        #=================
-        #changes
-        #================
+        # =================
+        # changes
+        # ================
         parsed = urlparse.urlparse(url)
         path = parsed.path.lower()
-        #===========
+        # ===========
 
         '''if any(pattern in url.lower() for pattern in dangerous_patterns):
             return False'''
-        #==============
+        # ==============
         if any(path.startswith(p) for p in dangerous_patterns):
             return False
-        #======================
+        # ======================
 
         return True
 
@@ -1929,7 +1939,6 @@ class ProfessionalCrawler:
 
             return False
 
-
         static_extensions = [
             # Images
             '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.svg', '.ico', '.webp',
@@ -1959,8 +1968,21 @@ class ProfessionalCrawler:
 
         # Check common static paths
         static_paths = [
+            # Original paths
             '/static/', '/assets/', '/images/', '/img/', '/css/', '/js/',
             '/fonts/', '/media/', '/uploads/', '/downloads/', '/files/',
+
+            # Framework & Build Outputs
+            '/public/', '/dist/', '/build/', '/out/', '/web/', '/resources/',
+
+            # Additional Media & Docs
+            '/pictures/', '/photos/', '/videos/', '/audio/', '/docs/', '/documents/', '/pdf/',
+
+            # CMS & Themes
+            '/wp-content/', '/wp-content/uploads/', '/themes/', '/theme/', '/skins/',
+
+            # Configs, Scripts, & Misc
+            '/.well-known/', '/scripts/', '/styles/', '/vendor/', '/locales/'
         ]
 
         if any(path in url for path in static_paths):
@@ -2019,8 +2041,6 @@ class ProfessionalCrawler:
 
         except Exception:
             return url
-
-
 
 
 # ============================================================================
@@ -2204,7 +2224,7 @@ class ProfessionalPayloadGenerator:
             '@(7*7)',
             '#{7*7}',
         ]
-        stored=[
+        stored = [
             '<script>ls</script>',
             'jaVasCript:/*-/*`/*\\`/*\\\'/*"/**/(/* */onerror=alert(1) )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=alert(1)//>\\x3e',
             '<<>',
@@ -2222,7 +2242,7 @@ class ProfessionalPayloadGenerator:
             'framework': framework_specific,
             'waf_bypass': waf_bypass,
             'ssti': ssti,
-            'stored':stored,
+            'stored': stored,
         }
 
     def _build_context_patterns(self) -> Dict[str, List[str]]:
@@ -2250,7 +2270,9 @@ class ProfessionalPayloadGenerator:
             lambda p: urlparse.quote_plus(p),
 
             # Unicode
-            lambda p: p.replace('a', '\\u0061').replace('l', '\\u006c').replace('e', '\\u0065').replace('r', '\\u0072').replace('t', '\\u0074'),
+            lambda p: p.replace('a', '\\u0061').replace('l', '\\u006c').replace('e', '\\u0065').replace('r',
+                                                                                                        '\\u0072').replace(
+                't', '\\u0074'),
 
             # Case variation
             lambda p: ''.join(c.upper() if i % 2 == 0 else c.lower() for i, c in enumerate(p)),
@@ -2298,7 +2320,6 @@ class ProfessionalPayloadGenerator:
         except Exception as e:
             self.logger.error(f"Failed to load custom payloads from {filepath}: {e}")
 
-
     def get_payloads(self, context: str = 'generic', frameworks: List[str] = None,
                      evasion_level: int = 1, count: int = None) -> List[str]:
         """Get payloads for specific context and requirements"""
@@ -2343,7 +2364,7 @@ class ProfessionalPayloadGenerator:
                         payloads.append(framework_payloads)'''
 
         # Apply evasion techniques if requested
-        if evasion_level >= 3 and context != 'dom' :
+        if evasion_level >= 3 and context != 'dom':
             original_count = len(payloads)
             for payload in payloads[:original_count]:  # Avoid infinite loop
                 for technique in self.evasion_techniques[:3]:
@@ -2425,6 +2446,43 @@ class ProfessionalPayloadGenerator:
 
         return 'text'
 
+
+
+#==============SINKER
+DANGEROUS_SINKS = {
+            # Direct Code Execution (RCE / Eval)
+            "eval",
+            "Function",
+            "execScript",
+            "setTimeout",
+            "setInterval",
+
+            # DOM XSS (HTML Manipulation)
+            "document.write",
+            "document.writeln",
+            "innerHTML",
+            "outerHTML",
+            "insertAdjacentHTML",
+            "srcdoc",
+
+            # Navigation / Open Redirect / Scheme XSS
+            "location",
+            "location.href",
+            "location.assign",
+            "location.replace",
+            "window.open",
+
+            # Resource Loading Attributes
+            "src",
+            "href",
+            "action",
+
+            # JavaScript Popups (Often low-severity, but good for proof-of-concept)
+            "alert",
+            "confirm",
+            "prompt"
+        }
+
 # ============================================================================
 # ADVANCED XSS DETECTOR
 # ============================================================================
@@ -2469,16 +2527,17 @@ class ProfessionalXSSDetector:
             'verified_xss': 0,
         }
 
+
     def scan(self) -> ScanResult:
         """Execute complete XSS scan"""
         scan_start = datetime.now()
 
         if not self.config.quiet:
-            print(f"\n{Fore.CYAN}{'='*80}{Style.RESET_ALL}")
+            print(f"\n{Fore.CYAN}{'=' * 80}{Style.RESET_ALL}")
             print(f"{Fore.CYAN}PROFESSIONAL XSS SCANNER - Starting Scan{Style.RESET_ALL}")
             print(f"{Fore.CYAN}Target: {self.config.target_url}{Style.RESET_ALL}")
             print(f"{Fore.CYAN}Scan ID: {self.config.scan_id}{Style.RESET_ALL}")
-            print(f"{Fore.CYAN}{'='*80}{Style.RESET_ALL}\n")
+            print(f"{Fore.CYAN}{'=' * 80}{Style.RESET_ALL}\n")
 
         try:
             # Phase 1: Discovery
@@ -2509,7 +2568,8 @@ class ProfessionalXSSDetector:
                 self.vulnerabilities.extend(reflected_vulns)
 
                 if not self.config.quiet:
-                    print(f"{Fore.GREEN}[✓] Found {len(reflected_vulns)} reflected XSS vulnerabilities{Style.RESET_ALL}")
+                    print(
+                        f"{Fore.GREEN}[✓] Found {len(reflected_vulns)} reflected XSS vulnerabilities{Style.RESET_ALL}")
 
             # Phase 4: DOM XSS
             if self.config.scan_dom and self.browser_manager:
@@ -2572,12 +2632,12 @@ class ProfessionalXSSDetector:
             result = self._create_result(pages, technologies, scan_start)
 
             if not self.config.quiet:
-                print(f"\n{Fore.CYAN}{'='*80}{Style.RESET_ALL}")
+                print(f"\n{Fore.CYAN}{'=' * 80}{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}SCAN COMPLETED{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}Duration: {result.duration:.2f} seconds{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}Pages Scanned: {result.pages_scanned}{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}Vulnerabilities Found: {result.vulnerabilities_found}{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}{'='*80}{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}{'=' * 80}{Style.RESET_ALL}")
 
             return result
 
@@ -2688,10 +2748,10 @@ class ProfessionalXSSDetector:
 
                         vulnerabilities.append(vuln)
                         self.stats["reflections_found"] += 1
-                        #------------------
-                        #added not need same header with multiple payloads
+                        # ------------------
+                        # added not need same header with multiple payloads
                         break
-                        #------------------
+                        # ------------------
 
 
 
@@ -2799,7 +2859,7 @@ class ProfessionalXSSDetector:
                     # ------------------
                     # added no dynamic result
                     break
-                    #------------
+                    # ------------
 
 
 
@@ -2859,7 +2919,7 @@ class ProfessionalXSSDetector:
                     # ------------------
                     # added no dynamic result
                     break
-                    #----------
+                    # ----------
 
 
 
@@ -3124,7 +3184,16 @@ class ProfessionalXSSDetector:
                     payload
                 )
 
-                if not result.get("executed"):
+                '''if not result.get("executed"):
+                    continue'''
+                log = result.get("log", [])
+
+                sink_hit = any(
+                    e.get("sink") in DANGEROUS_SINKS
+                    for e in log
+                )
+
+                if not sink_hit:
                     continue
 
                 method = result.get("method", "unknown")
@@ -3166,8 +3235,8 @@ class ProfessionalXSSDetector:
 
                 vulnerabilities.append(vuln)
 
-                #--------------
-                #dont added braek can contain dynamic result "sing_strength"
+                # --------------
+                # dont added braek can contain dynamic result "sing_strength"
 
 
             except Exception as e:
@@ -3193,7 +3262,16 @@ class ProfessionalXSSDetector:
                     payload
                 )
 
-                if not result.get("executed"):
+                '''if not result.get("executed"):
+                    continue'''
+                log = result.get("log", [])
+
+                sink_hit = any(
+                    e.get("sink") in DANGEROUS_SINKS
+                    for e in log
+                )
+
+                if not sink_hit:
                     continue
 
                 method = result.get("method", "unknown")
@@ -3246,9 +3324,36 @@ class ProfessionalXSSDetector:
         )
 
         param_names = [
-            "q", "search", "query", "page", "view",
-            "id", "next", "redirect", "return", "url",
-            "xss", "input"
+            # search
+            "q", "s", "search", "query", "keyword", "term", "find",
+
+            # navigation / redirect
+            "next", "redirect", "redirect_to", "return", "returnTo", "return_url",
+            "continue", "dest", "destination", "to", "from", "goto", "gotoUrl",
+            "callback", "cb", "forward", "route",
+
+            # url / linking
+            "url", "link", "u", "uri", "path", "location", "ref", "referrer",
+            "target", "out", "external",
+
+            # id / app state
+            "id", "item", "product", "page", "view", "section", "tab",
+            "index", "key", "slug", "doc", "docId",
+
+            # data containers
+            "data", "payload", "input", "value", "content", "text", "msg",
+            "message", "json", "object", "state",
+
+            # SPA/framework
+            "props", "state", "propsData", "component", "componentId",
+            "render", "template", "viewModel",
+
+            # fuzz/test
+            "xss", "test", "debug", "debugId", "inject", "payload",
+
+            # auth/session
+            "token", "session", "auth", "authToken", "access", "jwt",
+            "login", "signup", "verify"
         ]
 
         parsed = urllib.parse.urlsplit(url)
@@ -3258,14 +3363,35 @@ class ProfessionalXSSDetector:
         for param in param_names:
             for payload in payloads:
                 try:
+                    marker = f"__XSS_{uuid.uuid4().hex}__"
+                    payload_with_marker = payload.replace(
+                        "{{MARKER}}",
+                        marker
+                    )
+
                     params = dict(existing_params)
-                    params[param] = [payload]
+                    params[param] = [payload_with_marker]
 
-                    test_url = f"{base_url}?{urllib.parse.urlencode(params, doseq=True)}"
+                    test_url = (
+                        f"{base_url}?"
+                        f"{urllib.parse.urlencode(params, doseq=True)}"
+                    )
 
-                    result = self.browser_manager.test_dom_execution(test_url, payload)
+                    result = self.browser_manager.test_dom_execution(
+                        test_url,
+                        marker
+                    )
 
-                    if not result.get("executed"):
+                    '''if not result.get("executed"):
+                        continue'''
+                    log = result.get("log", [])
+
+                    sink_hit = any(
+                        e.get("sink") in DANGEROUS_SINKS
+                        for e in log
+                    )
+
+                    if not sink_hit:
                         continue
 
                     confidence = self._calculate_dom_confidence(
@@ -3290,9 +3416,9 @@ class ProfessionalXSSDetector:
                     )
 
                     vulnerabilities.append(vuln)
-                    #added break one param one payload enough
+                    # added break one param one payload enough
                     break
-                    #---------------
+                    # ---------------
 
                 except Exception as e:
                     self.logger.debug(f"DOM parameter test failed ({param}): {e}")
@@ -3311,14 +3437,31 @@ class ProfessionalXSSDetector:
 
         for payload in payloads:
             try:
-                if '#' in url:
-                    url = url.split('#', 1)[0]
-                    #test_url = f"{base}#{payload}"
-                test_url = f"{url}#{payload}"
+                marker = f"__XSS_{uuid.uuid4().hex}__"
 
-                result = self.browser_manager.test_dom_execution(test_url, payload)
+                payload_with_marker = payload.replace(
+                    "{{MARKER}}",
+                    marker
+                )
 
-                if result.get('executed'):
+                base = url.split("#")[0]
+
+                test_url = f"{base}#{payload_with_marker}"
+
+                result = self.browser_manager.test_dom_execution(
+                    test_url,
+                    marker
+                )
+                log = result.get("log", [])
+
+                sink_hit = any(
+                    e.get("sink") in DANGEROUS_SINKS
+                    for e in log
+                )
+
+
+
+                if sink_hit:
                     confidence = self._calculate_dom_confidence(result, 'hash')
 
                     vuln = self._create_vulnerability(
@@ -3338,7 +3481,7 @@ class ProfessionalXSSDetector:
                     )
 
                     vulnerabilities.append(vuln)
-                    #added break because no other type vulnerabilty no dynamic result
+                    # added break because no other type vulnerabilty no dynamic result
                     break
 
             except Exception as e:
@@ -3376,6 +3519,7 @@ class ProfessionalXSSDetector:
 
         # Browser verified = mandatory for DOM
         if result.get('executed'):
+
             confidence += 0.1
 
         return round(min(confidence, 1.0), 2)
@@ -3419,10 +3563,10 @@ class ProfessionalXSSDetector:
             # Look for forms that might store data
             for form in page.forms:
                 # Check for common storage patterns
-                #-----------------
-                #action = form.get('action', '').lower()
-                #method = form.get('method', 'POST').upper()
-                #--------------------------
+                # -----------------
+                # action = form.get('action', '').lower()
+                # method = form.get('method', 'POST').upper()
+                # --------------------------
                 method = form.get('method', 'POST').upper()
 
                 raw_action = (form.get('action') or '').strip()
@@ -3430,8 +3574,6 @@ class ProfessionalXSSDetector:
                 action_url = self._make_absolute(action_url, page.url)
 
                 action_lc = action_url.lower()
-
-
 
                 '''if any(keyword in action for keyword in storage_keywords):
                     endpoints.append({
@@ -3452,7 +3594,6 @@ class ProfessionalXSSDetector:
                     })
 
         return endpoints
-
 
     def _make_absolute(self, action_url: str, base_url: str) -> str:
         """
@@ -3495,7 +3636,6 @@ class ProfessionalXSSDetector:
             count=3  # Small number for stored XSS
         )
 
-
         testable_inputs = [
             inp for inp in endpoint['inputs']
             if inp.get('name')
@@ -3514,7 +3654,7 @@ class ProfessionalXSSDetector:
                         if field.get('name'):
                             if field['name'] == inp['name']:
 
-                                data[field['name']] = payload+marker
+                                data[field['name']] = payload + marker
                             else:
                                 data[field['name']] = field.get('value', 'test')
 
@@ -3527,23 +3667,22 @@ class ProfessionalXSSDetector:
                     if not response:
                         continue
 
-
-
                     if response.headers.get("Location"):
-                        endpoint['url']= response.headers.get("Location") if "http" in response.headers.get("Location") else endpoint['url']+response.headers.get("Location")
+                        endpoint['url'] = response.headers.get("Location") if "http" in response.headers.get(
+                            "Location") else endpoint['url'] + response.headers.get("Location")
 
-                    if self._verify_stored_content(endpoint, payload+marker, client):
+                    if self._verify_stored_content(endpoint, payload + marker, client):
                         vulnerabilities.append(
-                            self._build_stored_vuln(endpoint, inp, payload+marker, 0.9,True)
+                            self._build_stored_vuln(endpoint, inp, payload + marker, 0.9, True)
                         )
                         return vulnerabilities
-                    #---------------dont added additional info just
-                    #continue not next text
+                    # ---------------dont added additional info just
+                    # continue not next text
 
                     '''if marker in response.text:
                         vulnerabilities.append(self._build_stored_vuln(endpoint,inp,payload+marker,0.6,False))'''
 
-                    #--------------------------
+                    # --------------------------
                 except Exception as e:
                     self.logger.debug(f"Stored XSS test error: {e}")
 
@@ -3584,7 +3723,7 @@ class ProfessionalXSSDetector:
 
         return False
 
-    def _build_stored_vuln(self, endpoint, input_field, marker, confidence,verified = False):
+    def _build_stored_vuln(self, endpoint, input_field, marker, confidence, verified=False):
         return self._create_vulnerability(
             vuln_type='stored',
             url=endpoint['url'],
@@ -3673,8 +3812,8 @@ class ProfessionalXSSDetector:
                         )
 
                         vulnerabilities.append(vuln)
-                        #----------------
-                        #No break because vulnerabilty verify going through multimethod test
+                        # ----------------
+                        # No break because vulnerabilty verify going through multimethod test
 
             except Exception as e:
                 self.logger.debug(f"JSON test failed: {e}")
@@ -3710,7 +3849,6 @@ class ProfessionalXSSDetector:
                     if payload in response.text:
                         triggered = True
 
-
                     if response and response.status_code < 400:
                         vuln = self._create_vulnerability(
                             vuln_type='blind',
@@ -3731,9 +3869,9 @@ class ProfessionalXSSDetector:
                         )
 
                         vulnerabilities.append(vuln)
-                        #---------------
+                        # ---------------
                         break
-                        #--------------
+                        # --------------
 
                 except Exception as e:
                     self.logger.debug(f"Blind XSS test failed: {e}")
@@ -3841,7 +3979,6 @@ class ProfessionalXSSDetector:
         if vuln.type == "blind":
             return self._verify_blind(vuln)
 
-
         # Method 2: Check for encoding
         verification_results.append(self._verify_encoding(vuln))
 
@@ -3855,8 +3992,8 @@ class ProfessionalXSSDetector:
 
         return vuln
 
-    #-----------------------------
-    #DONE
+    # -----------------------------
+    # DONE
 
     def _verify_dom(self, vuln: Vulnerability) -> Vulnerability:
         """
@@ -3871,10 +4008,10 @@ class ProfessionalXSSDetector:
             vuln.verification_method = "dom_unconfirmed"
 
         return vuln
-    #---------------------------------------
 
+    # ---------------------------------------
 
-    #-------------------done
+    # -------------------done
 
     def _verify_reflected(self, vuln: Vulnerability) -> Vulnerability:
         """
@@ -3891,9 +4028,8 @@ class ProfessionalXSSDetector:
 
         return vuln
 
-
-    #-----------------------------------
-    #DONE
+    # -----------------------------------
+    # DONE
 
     def _verify_blind(self, vuln: Vulnerability) -> Vulnerability:
         """
@@ -3908,8 +4044,9 @@ class ProfessionalXSSDetector:
             vuln.verification_method = "blind_pending"
 
         return vuln
-    #----------------------------
-    #DONE
+
+    # ----------------------------
+    # DONE
 
     def _verify_stored(self, vuln: Vulnerability) -> Vulnerability:
         """
@@ -3924,7 +4061,8 @@ class ProfessionalXSSDetector:
             vuln.verification_method = "stored_not_rendered"
 
         return vuln
-    #----------------------------------
+
+    # ----------------------------------
 
     def _verify_with_simple_method(self, vuln: Vulnerability) -> Vulnerability:
         """Simple verification by re-testing"""
@@ -4092,76 +4230,232 @@ class ProfessionalXSSDetector:
         )
 
 
-
-
-
-
-#-------------------------hooks for dom
+# -------------------------hooks for dom
 DOM_HOOK_TEMPLATE = r"""
 (function () {
-  const MARKER = "__XSS_MARKER__";
 
-  window.__xss = {
+const MARKER = "__XSS_MARKER__";
+
+window.__xss = {
     executed: false,
     method: null,
+    sink: null,
     log: []
-  };
+};
 
-  function mark(method, data) {
+/* ---------------- CORE HELPERS ---------------- */
+
+function isMarked(data) {
     try {
-      if (data && JSON.stringify(data).includes(MARKER)) {
-        window.__xss.executed = true;
-        window.__xss.method = method;
-        window.__xss.log.push({method: method, data: data});
-      }
-    } catch (e) {}
-  }
-
-  ['alert','confirm','prompt'].forEach(fn => {
-    const orig = window[fn];
-    window[fn] = function (...args) {
-      mark(fn, args);
-      return orig && orig.apply(this, args);
-    };
-  });
-
-  const origEval = window.eval;
-  window.eval = function (...args) {
-    mark('eval', args);
-    return origEval.apply(this, args);
-  };
-
-  const OrigFunction = window.Function;
-  window.Function = function (...args) {
-    mark('Function', args);
-    return OrigFunction.apply(this, args);
-  };
-
-  const origWrite = document.write;
-  document.write = function (html) {
-    mark('document.write', html);
-    return origWrite.apply(document, arguments);
-  };
-
-  const desc = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-  Object.defineProperty(Element.prototype, 'innerHTML', {
-    set(value) {
-      mark('innerHTML', value);
-      return desc.set.call(this, value);
+        let text = (typeof data === "string")
+            ? data
+            : JSON.stringify(data || "");
+        return text.includes(MARKER);
+    } catch (e) {
+        return false;
     }
-  });
+}
 
-  window.addEventListener("message", function (e) {
-    mark("postMessage", e.data);
-  });
+function markExecution(method, sink, data) {
+    if (!isMarked(data)) return;
+
+    window.__xss.executed = true;
+    window.__xss.method = method;
+    window.__xss.sink = sink;
+
+    window.__xss.log.push({
+        type: "execution",
+        method,
+        sink,
+        data: String(data).slice(0, 300)
+    });
+}
+
+function markDom(source, sink, data) {
+    if (!isMarked(data)) return;
+
+    window.__xss.log.push({
+        type: "dom",
+        source,
+        sink,
+        data: String(data).slice(0, 300)
+    });
+}
+
+/* ---------------- EXECUTION SINKS ---------------- */
+
+const origEval = window.eval;
+window.eval = function (...args) {
+    markExecution("eval", "eval", args.join(" "));
+    return origEval.apply(this, args);
+};
+
+const OrigFunction = window.Function;
+window.Function = function (...args) {
+    markExecution("Function", "Function", args.join(" "));
+    return OrigFunction.apply(this, args);
+};
+
+const origSetTimeout = window.setTimeout;
+window.setTimeout = function (code, delay) {
+    if (typeof code === "string") {
+        markExecution("setTimeout", "setTimeout", code);
+    }
+    return origSetTimeout.apply(this, arguments);
+};
+
+const origSetInterval = window.setInterval;
+window.setInterval = function (code, delay) {
+    if (typeof code === "string") {
+        markExecution("setInterval", "setInterval", code);
+    }
+    return origSetInterval.apply(this, arguments);
+};
+
+/* ---------------- POPUPS ---------------- */
+
+window.alert = function (...args) {
+    markExecution("alert", "alert", args.join(" "));
+};
+
+window.confirm = function (...args) {
+    markExecution("confirm", "confirm", args.join(" "));
+};
+
+window.prompt = function (...args) {
+    markExecution("prompt", "prompt", args.join(" "));
+};
+
+/* ---------------- DOCUMENT WRITES ---------------- */
+
+const origWrite = document.write;
+document.write = function (html) {
+    markExecution("document.write", "document.write", html);
+    return origWrite.apply(document, arguments);
+};
+
+const origWriteLn = document.writeln;
+document.writeln = function (html) {
+    markExecution("document.writeln", "document.writeln", html);
+    return origWriteLn.apply(document, arguments);
+};
+
+/* ---------------- DOM HTML SINKS ---------------- */
+
+try {
+    const innerDesc = Object.getOwnPropertyDescriptor(Element.prototype, "innerHTML");
+
+    Object.defineProperty(Element.prototype, "innerHTML", {
+        set(value) {
+            markDom("innerHTML", "innerHTML", value);
+            return innerDesc.set.call(this, value);
+        }
+    });
+} catch (e) {}
+
+try {
+    const outerDesc = Object.getOwnPropertyDescriptor(Element.prototype, "outerHTML");
+
+    Object.defineProperty(Element.prototype, "outerHTML", {
+        set(value) {
+            markDom("outerHTML", "outerHTML", value);
+            return outerDesc.set.call(this, value);
+        }
+    });
+} catch (e) {}
+
+try {
+    const origInsert = Element.prototype.insertAdjacentHTML;
+
+    Element.prototype.insertAdjacentHTML = function (pos, html) {
+        markDom("insertAdjacentHTML", "insertAdjacentHTML", html);
+        return origInsert.apply(this, arguments);
+    };
+} catch (e) {}
+
+try {
+    const iframeDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "srcdoc");
+
+    Object.defineProperty(HTMLIFrameElement.prototype, "srcdoc", {
+        set(value) {
+            markDom("srcdoc", "srcdoc", value);
+            return iframeDesc.set.call(this, value);
+        }
+    });
+} catch (e) {}
+
+/* ---------------- ATTRIBUTE SINKS ---------------- */
+
+const origSetAttr = Element.prototype.setAttribute;
+
+Element.prototype.setAttribute = function (name, value) {
+    if (["src", "href", "action"].includes(name)) {
+        markDom("setAttribute", name, value);
+    }
+    return origSetAttr.apply(this, arguments);
+};
+
+/* property-based fallback */
+function hookProp(obj, prop, sinkName) {
+    try {
+        const desc = Object.getOwnPropertyDescriptor(obj, prop);
+        if (!desc || !desc.set) return;
+
+        Object.defineProperty(obj, prop, {
+            set(value) {
+                markDom("property", sinkName, value);
+                return desc.set.call(this, value);
+            }
+        });
+    } catch (e) {}
+}
+
+hookProp(HTMLImageElement.prototype, "src", "src");
+hookProp(HTMLScriptElement.prototype, "src", "src");
+hookProp(HTMLAnchorElement.prototype, "href", "href");
+
+/* ---------------- NAVIGATION ---------------- */
+
+try {
+    const origOpen = window.open;
+
+    window.open = function (...args) {
+        markDom("navigation", "window.open", args.join(" "));
+        return origOpen.apply(this, args);
+    };
+} catch (e) {}
+
+try {
+    const loc = window.location;
+
+    ["assign", "replace"].forEach(fn => {
+        try {
+            const orig = loc[fn];
+            loc[fn] = function (url) {
+                markDom("navigation", "location." + fn, url);
+                return orig.apply(this, arguments);
+            };
+        } catch (e) {}
+    });
+} catch (e) {}
+
+/* ---------------- POSTMESSAGE ---------------- */
+
+window.addEventListener("message", function (e) {
+    try {
+        let data = (typeof e.data === "string")
+            ? e.data
+            : JSON.stringify(e.data || {});
+
+        markDom("postMessage", "message", data);
+    } catch (e) {}
+});
+
 })();
 """
 
 
-
-
-
-#-------------------------------
+# -------------------------------
 
 # ============================================================================
 # BROWSER MANAGER
@@ -4214,23 +4508,22 @@ class BrowserManager:
                 if self.config.headless:
                     options.add_argument('--headless=new')
 
-
-                #------------------------aded later for solve tls issue
+                # ------------------------aded later for solve tls issue
                 options.add_argument('--ignore-certificate-errors')
                 options.add_argument('--allow-insecure-localhost')
                 options.set_capability("acceptInsecureCerts", True)
-                #------------------
+                # ------------------
 
                 # Performance and stealth options
                 options.add_argument('--no-sandbox')
                 options.add_argument('--disable-dev-shm-usage')
                 options.add_argument('--disable-gpu')
                 options.add_argument('--window-size=1920,1080')
-                #options.add_argument('--disable-blink-features=AutomationControlled') action for security no false positive
+                # options.add_argument('--disable-blink-features=AutomationControlled') action for security no false positive
 
                 # Disable images and unnecessary features for speed
                 prefs = {
-                    #"profile.managed_default_content_settings.images": 2,
+                    # "profile.managed_default_content_settings.images": 2,
                     "profile.default_content_setting_values.notifications": 2,
                     "profile.default_content_setting_values.popups": 2,
                     "profile.default_content_setting_values.geolocation": 2,
@@ -4311,20 +4604,25 @@ class BrowserManager:
                 except:
                     pass
 
-    def test_dom_execution(self, url: str, payload: str) -> Dict:
+    def test_dom_execution(self, url: str, payload_or_maker: str) -> Dict:
         driver = self.get_driver()
         if not driver:
-            return {'executed': False, 'error': 'no_browser'}
+            return {"executed": False, "error": "no_browser"}
 
-        marker = f"__XSS_{uuid.uuid4().hex}__"
-        payload = payload.replace("{{MARKER}}", marker)
+        m = re.search(
+            r"__XSS_[a-f0-9]+__",
+            payload_or_maker
+        )
+
+        marker = m.group(0) if m else payload_or_maker
+
+
         hook = DOM_HOOK_TEMPLATE.replace("__XSS_MARKER__", marker)
 
         try:
-            self.stats['dom_tests'] += 1
+            self.stats["dom_tests"] += 1
 
-            # Inject hooks BEFORE navigation (Chrome strict, Firefox best-effort)
-            if self.config.browser_type == 'chrome':
+            if self.config.browser_type == "chrome":
                 driver.execute_cdp_cmd(
                     "Page.addScriptToEvaluateOnNewDocument",
                     {"source": hook}
@@ -4335,36 +4633,27 @@ class BrowserManager:
 
             driver.get(url)
 
-            try:
-                WebDriverWait(driver, 6).until(
-                    lambda d: d.execute_script(
-                        "return window.__xss && window.__xss.executed === true"
-                    )
-                )
-            except TimeoutException:
-                pass
-
             result = driver.execute_script("return window.__xss || {};")
-
-            executed = bool(result.get("executed"))
-            method = result.get("method")
             log = result.get("log", [])
 
-            if executed:
-                self.stats['executions_detected'] += 1
+            sink_hit = any(
+                entry.get("sink") in DANGEROUS_SINKS
+                and payload_or_maker in str(entry.get("data", ""))
+                for entry in log
+            )
 
             return {
-                'executed': executed,
-                'method': method,
-                'log': log,
-                'url': url,
-                'payload': payload[:100],
-                'marker': marker
+                "executed": sink_hit,
+                "sink": result.get("sink"),
+                "method": result.get("method"),
+                "log": log,
+                "url": url,
+                "marker": marker
             }
 
         except Exception as e:
-            self.stats['errors'] += 1
-            return {'executed': False, 'error': str(e)}
+            self.stats["errors"] += 1
+            return {"executed": False, "error": str(e)}
 
         finally:
             self.return_driver(driver)
@@ -4372,16 +4661,16 @@ class BrowserManager:
     def test_postmessage_execution(self, url: str, payload: str) -> Dict:
         driver = self.get_driver()
         if not driver:
-            return {'executed': False, 'error': 'no_browser'}
+            return {"executed": False, "error": "no_browser"}
 
         marker = f"__XSS_{uuid.uuid4().hex}__"
         payload = payload.replace("{{MARKER}}", marker)
         hook = DOM_HOOK_TEMPLATE.replace("__XSS_MARKER__", marker)
 
         try:
-            self.stats['dom_tests'] += 1
+            self.stats["dom_tests"] += 1
 
-            if self.config.browser_type == 'chrome':
+            if self.config.browser_type == "chrome":
                 driver.execute_cdp_cmd(
                     "Page.addScriptToEvaluateOnNewDocument",
                     {"source": hook}
@@ -4392,38 +4681,40 @@ class BrowserManager:
 
             driver.get(url)
 
+            # trigger postMessage
             driver.execute_script("""
-                window.postMessage({ message: arguments[0] }, "*");
+                window.postMessage(arguments[0], "*");
             """, payload)
 
-            try:
-                WebDriverWait(driver, 5).until(
-                    lambda d: d.execute_script(
-                        "return window.__xss && window.__xss.executed === true"
-                    )
+            # wait for any sink activity
+            WebDriverWait(driver, 5).until(
+                lambda d: d.execute_script(
+                    "return window.__xss && window.__xss.log.length >= 0"
                 )
-            except TimeoutException:
-                pass
+            )
 
             result = driver.execute_script("return window.__xss || {};")
 
-            executed = bool(result.get("executed"))
-            method = result.get("method")
+            log = result.get("log", [])
 
-            if executed:
-                self.stats['executions_detected'] += 1
+            # 🔥 IMPORTANT: only mark executed if REAL sink exists
+            sink_hit = any(
+                entry.get("sink") in DANGEROUS_SINKS
+                for entry in log
+            )
 
             return {
-                'executed': executed,
-                'method': method,
-                'url': url,
-                'payload': payload[:100],
-                'marker': marker
+                "executed": sink_hit,
+                "sink": result.get("sink"),
+                "method": result.get("method"),
+                "log": log,
+                "url": url,
+                "marker": marker
             }
 
         except Exception as e:
-            self.stats['errors'] += 1
-            return {'executed': False, 'error': str(e)}
+            self.stats["errors"] += 1
+            return {"executed": False, "error": str(e)}
 
         finally:
             self.return_driver(driver)
@@ -4431,16 +4722,16 @@ class BrowserManager:
     def test_web_storage_execution(self, url: str, payload: str) -> Dict:
         driver = self.get_driver()
         if not driver:
-            return {'executed': False, 'error': 'no_browser'}
+            return {"executed": False, "error": "no_browser"}
 
         marker = f"__XSS_{uuid.uuid4().hex}__"
         payload = payload.replace("{{MARKER}}", marker)
         hook = DOM_HOOK_TEMPLATE.replace("__XSS_MARKER__", marker)
 
         try:
-            self.stats['dom_tests'] += 1
+            self.stats["dom_tests"] += 1
 
-            if self.config.browser_type == 'chrome':
+            if self.config.browser_type == "chrome":
                 driver.execute_cdp_cmd(
                     "Page.addScriptToEvaluateOnNewDocument",
                     {"source": hook}
@@ -4451,42 +4742,41 @@ class BrowserManager:
 
             driver.get(url)
 
+            # inject storage
             driver.execute_script("""
                 localStorage.setItem("xss", arguments[0]);
                 sessionStorage.setItem("xss", arguments[0]);
             """, payload)
 
-            driver.refresh()
-
-            try:
-                WebDriverWait(driver, 5).until(
-                    lambda d: d.execute_script(
-                        "return window.__xss && window.__xss.executed === true"
-                    )
-                )
-            except TimeoutException:
-                pass
+            # 🔥 CRITICAL FIX: actively read storage (NOT refresh)
+            driver.execute_script("""
+                const v = localStorage.getItem("xss");
+                if (v && v.includes(arguments[0])) {
+                    eval(v);
+                }
+            """, marker)
 
             result = driver.execute_script("return window.__xss || {};")
+            log = result.get("log", [])
 
-            executed = bool(result.get("executed"))
-            method = result.get("method")
-
-            if executed:
-                self.stats['executions_detected'] += 1
+            sink_hit = any(
+                entry.get("sink") in DANGEROUS_SINKS
+                for entry in log
+            )
 
             return {
-                'executed': executed,
-                'method': method,
-                'storage': 'webStorage',
-                'url': url,
-                'payload': payload[:100],
-                'marker': marker
+                "executed": sink_hit,
+                "sink": result.get("sink"),
+                "method": result.get("method"),
+                "storage": "webStorage",
+                "log": log,
+                "url": url,
+                "marker": marker
             }
 
         except Exception as e:
-            self.stats['errors'] += 1
-            return {'executed': False, 'error': str(e)}
+            self.stats["errors"] += 1
+            return {"executed": False, "error": str(e)}
 
         finally:
             self.return_driver(driver)
@@ -4500,6 +4790,7 @@ class BrowserManager:
                 except:
                     pass
             self.drivers.clear()
+
 
 # ============================================================================
 # JAVASCRIPT ANALYZER
@@ -4643,6 +4934,7 @@ class JavaScriptAnalyzer:
 
         return findings
 
+
 # ============================================================================
 # OOB SERVER
 # ============================================================================
@@ -4687,6 +4979,7 @@ class OOBServer:
             'registered': datetime.now(),
             'received': False
         }
+
 
 # ============================================================================
 # REPORT GENERATOR
@@ -5087,7 +5380,7 @@ class ProfessionalReportGenerator:
                 <div class="card-value">{{ low_count }}</div>
                 <div class="card-subtitle">May impact</div>
             </div>
-            
+
         </div>
 
                 <div class="section">
@@ -5412,6 +5705,7 @@ class ProfessionalReportGenerator:
 
         self.logger.info(f"Markdown report saved to: {md_path}")
         return md_path
+
 
 # ============================================================================
 # MAIN SCANNER CLASS
@@ -5851,22 +6145,14 @@ if __name__ == "__main__":
         print("\n\nInterrupted by user")
         sys.exit(130)
 
+# --------------------------------------
+# NOTE
+# ------------------------------------
 
 
-#--------------------------------------
-#NOTE
-#------------------------------------
+# [:limit] are set by default for securit and resource in scanner search "limit" ctrl+f
+# so please adjust this accordingly
 
 
-
-
-#[:limit] are set by default for securit and resource
-#so please adjust this accordingly
-
-
-
-
-
-
-#-------------------------------------------------
+# -------------------------------------------------
 #   vulnerabilities.append( break statement are added check that
