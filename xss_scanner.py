@@ -5906,7 +5906,10 @@ For more information, visit: https://github.com/professional-xss-scanner
     )
 
     # Required
-    parser.add_argument("url", nargs="?", default=None, help="Target URL to scan")
+    if sys.argv[0].endswith(".py"):
+        parser.add_argument("url",  help="Target URL to scan")
+    else:
+        parser.add_argument("url", nargs="?", default=None, help="Target URL to scan")
 
     # Scan Modes
     scan_mode = parser.add_mutually_exclusive_group()
