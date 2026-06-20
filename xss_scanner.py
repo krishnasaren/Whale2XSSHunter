@@ -62,7 +62,7 @@ def install_missing_dependencies():
             subprocess.check_call(
                 [
                     sys.executable, "-m", "pip", "install",
-                    "--quiet", "--quiet",
+                    "--quiet","--break-system-packages",
                     "--disable-pip-version-check",
                     "--no-input",
                     "--progress-bar", "off",
