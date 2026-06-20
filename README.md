@@ -25,6 +25,13 @@ cd xss-scanner
 # Install dependencies
 pip install -r requirements.txt
 
+[Linux]
+chmod 777 run.sh
+./run.sh
+
+[Windows]
+./run.bat
+
 # Additional dependencies (optional but recommended)
 pip install selenium beautifulsoup4 js2py aiohttp
 ```
