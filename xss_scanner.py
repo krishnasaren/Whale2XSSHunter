@@ -249,6 +249,7 @@ import dns.resolver
 import yaml
 
 print("[✓] All modules loaded successfully.")
+print(f"{Fore.YELLOW}[*] WARMUP: Some Libraries Need Online Updates ! HOLD ON..{Style.RESET_ALL}")
 
 
 #-----------------
@@ -2482,7 +2483,7 @@ class ProfessionalXSSDetector:
         try:
             # Phase 1: Discovery
             if not self.config.quiet:
-                print(f"{Fore.YELLOW}[*] Phase 1: Discovery & Crawling{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}[*] Phase 1: Discovery & Crawling....{Style.RESET_ALL}")
 
             pages = self.crawler.crawl(self.config.target_url)
             self.stats['pages_scanned'] = len(pages)
@@ -2494,7 +2495,7 @@ class ProfessionalXSSDetector:
 
             # Phase 2: Technology Detection
             if not self.config.quiet:
-                print(f"{Fore.YELLOW}[*] Phase 2: Technology Detection{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}[*] Phase 2: Technology Detection....{Style.RESET_ALL}")
 
             technologies = self._detect_technologies(pages)
             frameworks = technologies.get('frameworks', [])
@@ -2502,7 +2503,7 @@ class ProfessionalXSSDetector:
             # Phase 3: Reflected XSS
             if self.config.scan_reflected:
                 if not self.config.quiet:
-                    print(f"{Fore.YELLOW}[*] Phase 3: Reflected XSS Scanning{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[*] Phase 3: Reflected XSS Scanning....{Style.RESET_ALL}")
 
                 reflected_vulns = self._scan_reflected_xss(pages, frameworks)
                 self.vulnerabilities.extend(reflected_vulns)
@@ -2513,7 +2514,7 @@ class ProfessionalXSSDetector:
             # Phase 4: DOM XSS
             if self.config.scan_dom and self.browser_manager:
                 if not self.config.quiet:
-                    print(f"{Fore.YELLOW}[*] Phase 4: DOM XSS Scanning{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[*] Phase 4: DOM XSS Scanning.....{Style.RESET_ALL}")
 
                 dom_vulns = self._scan_dom_xss(pages)
                 self.vulnerabilities.extend(dom_vulns)
@@ -2524,7 +2525,7 @@ class ProfessionalXSSDetector:
             # Phase 5: JSON XSS
             if self.config.scan_json:
                 if not self.config.quiet:
-                    print(f"{Fore.YELLOW}[*] Phase 5: JSON XSS Scanning{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[*] Phase 5: JSON XSS Scanning...{Style.RESET_ALL}")
 
                 json_vulns = self._scan_json_xss(pages)
                 self.vulnerabilities.extend(json_vulns)
@@ -2535,7 +2536,7 @@ class ProfessionalXSSDetector:
             # Phase 6: Blind XSS
             if self.config.scan_blind:
                 if not self.config.quiet:
-                    print(f"{Fore.YELLOW}[*] Phase 6: Blind XSS Scanning{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[*] Phase 6: Blind XSS Scanning.....{Style.RESET_ALL}")
 
                 blind_vulns = self._scan_blind_xss(pages)
                 self.vulnerabilities.extend(blind_vulns)
@@ -2546,7 +2547,7 @@ class ProfessionalXSSDetector:
             # Phase 7: Stored XSS (SAFE - last)
             if self.config.scan_stored:
                 if not self.config.quiet:
-                    print(f"{Fore.YELLOW}[*] Phase 7: Stored XSS Scanning (Safe Mode){Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[*] Phase 7: Stored XSS Scanning (Safe Mode)...{Style.RESET_ALL}")
 
                 stored_vulns = self._scan_stored_xss_safely(pages)
                 self.vulnerabilities.extend(stored_vulns)
@@ -2556,14 +2557,14 @@ class ProfessionalXSSDetector:
 
             # Phase 8: Verification
             if not self.config.quiet:
-                print(f"{Fore.YELLOW}[*] Phase 8: Vulnerability Verification{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}[*] Phase 8: Vulnerability Verification....{Style.RESET_ALL}")
 
             self.verified_vulnerabilities = self._verify_vulnerabilities(self.vulnerabilities)
 
             # Phase 9: Risk Assessment
             if self.config.risk_assessment:
                 if not self.config.quiet:
-                    print(f"{Fore.YELLOW}[*] Phase 9: Risk Assessment{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[*] Phase 9: Risk Assessment...{Style.RESET_ALL}")
 
                 self._assess_vulnerability_risks()
 
