@@ -1,0 +1,13 @@
+requests
+beautifulsoup4
+tldextract
+selenium
+dukpy
+py-mini-racer
+jinja2
+colorama
+pyyaml
+python-whois
+dnspython
+aiohttp
+aiofiles
