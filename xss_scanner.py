@@ -234,7 +234,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.common.exceptions import WebDriverException, TimeoutException
+
 import selenium.webdriver.chrome.webdriver
+
+
 
 import tldextract
 import dukpy
@@ -3185,16 +3188,7 @@ class ProfessionalXSSDetector:
                     payload
                 )
 
-                '''if not result.get("executed"):
-                    continue'''
-                log = result.get("log", [])
-
-                sink_hit = any(
-                    e.get("sink") in DANGEROUS_SINKS
-                    for e in log
-                )
-
-                if not sink_hit:
+                if not result.get("executed"):
                     continue
 
                 method = result.get("method", "unknown")
@@ -3224,6 +3218,7 @@ class ProfessionalXSSDetector:
                     context={
                         "dom_location": "web_storage",
                         "storage_type": storage,
+                        "dom_sink": result.get("sink", 'unknown'),
                         "execution_method": method,
                         "browser_verified": True,
                         "persistence": True,
@@ -3263,16 +3258,7 @@ class ProfessionalXSSDetector:
                     payload
                 )
 
-                '''if not result.get("executed"):
-                    continue'''
-                log = result.get("log", [])
-
-                sink_hit = any(
-                    e.get("sink") in DANGEROUS_SINKS
-                    for e in log
-                )
-
-                if not sink_hit:
+                if not result.get("executed"):
                     continue
 
                 method = result.get("method", "unknown")
@@ -3298,6 +3284,7 @@ class ProfessionalXSSDetector:
                     evidence=f"DOM XSS via postMessage executed using sink '{method}'",
                     context={
                         "dom_location": "postMessage",
+                        "dom_sink": result.get("sink", 'unknown'),
                         "execution_method": method,
                         "browser_verified": True,
                         "sink_strength": (
@@ -3383,16 +3370,7 @@ class ProfessionalXSSDetector:
                         marker
                     )
 
-                    '''if not result.get("executed"):
-                        continue'''
-                    log = result.get("log", [])
-
-                    sink_hit = any(
-                        e.get("sink") in DANGEROUS_SINKS
-                        for e in log
-                    )
-
-                    if not sink_hit:
+                    if not result.get("executed"):
                         continue
 
                     confidence = self._calculate_dom_confidence(
@@ -3411,6 +3389,7 @@ class ProfessionalXSSDetector:
                         context={
                             "dom_location": "url_parameter",
                             "parameter": param,
+                            "dom_sink": result.get("sink", 'unknown'),
                             "execution_method": result.get("method"),
                             "browser_verified": True,
                         }
@@ -3453,16 +3432,9 @@ class ProfessionalXSSDetector:
                     test_url,
                     marker
                 )
-                log = result.get("log", [])
-
-                sink_hit = any(
-                    e.get("sink") in DANGEROUS_SINKS
-                    for e in log
-                )
 
 
-
-                if sink_hit:
+                if result.get('executed') or result.get('dom_sink_hit'):
                     confidence = self._calculate_dom_confidence(result, 'hash')
 
                     vuln = self._create_vulnerability(
@@ -3475,9 +3447,10 @@ class ProfessionalXSSDetector:
                         evidence=f"DOM XSS executed via hash using {result.get('method', 'unknown')}",
                         context={
                             'dom_location': 'hash',
+                            "dom_sink": result.get("sink",'unknown'),
                             'execution_method': result.get('method', 'unknown'),
-                            'browser_verified': True,
-                            'confidence_reason': 'browser_verified_dom_execution'
+                            'browser_verified': bool(result.get("executed")),
+                            'confidence_reason': "browser_verified_dom_execution" if result.get("executed") else "dangerous_dom_sink_reached"
                         }
                     )
 
@@ -3520,7 +3493,6 @@ class ProfessionalXSSDetector:
 
         # Browser verified = mandatory for DOM
         if result.get('executed'):
-
             confidence += 0.1
 
         return round(min(confidence, 1.0), 2)
@@ -4644,7 +4616,8 @@ class BrowserManager:
             )
 
             return {
-                "executed": sink_hit,
+                "executed": bool(result.get("executed")),
+                "dom_sink_hit": sink_hit,
                 "sink": result.get("sink"),
                 "method": result.get("method"),
                 "log": log,
@@ -4701,11 +4674,13 @@ class BrowserManager:
             # 🔥 IMPORTANT: only mark executed if REAL sink exists
             sink_hit = any(
                 entry.get("sink") in DANGEROUS_SINKS
+                and marker in str(entry.get("data", ""))
                 for entry in log
             )
 
             return {
-                "executed": sink_hit,
+                "executed": bool(result.get("executed")),
+                "dom_sink_hit": sink_hit,
                 "sink": result.get("sink"),
                 "method": result.get("method"),
                 "log": log,
@@ -4762,14 +4737,15 @@ class BrowserManager:
 
             sink_hit = any(
                 entry.get("sink") in DANGEROUS_SINKS
+                and marker in str(entry.get("data", ""))
                 for entry in log
             )
 
             return {
-                "executed": sink_hit,
+                "executed": bool(result.get("executed")),
+                "dom_sink_hit": sink_hit,
                 "sink": result.get("sink"),
                 "method": result.get("method"),
-                "storage": "webStorage",
                 "log": log,
                 "url": url,
                 "marker": marker
