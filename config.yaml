@@ -1,0 +1,140 @@
+# =========================
+# Professional XSS Scanner
+# External Configuration
+# =========================
+
+# Target (you can override via CLI too)
+target_url: "https://example.com"
+
+# Identity (optional override)
+scanner_name: "ProfessionalXSSScanner"
+version: "4.0"
+
+# =========================
+# PERFORMANCE SETTINGS
+# =========================
+max_threads: 25
+max_depth: 5
+max_pages: 200
+max_links_per_page: 100
+request_timeout: 15
+request_delay: 0.1
+max_retries: 1
+connection_pool_size: 50
+
+# =========================
+# SCAN MODES
+# =========================
+scan_reflected: true
+scan_stored: true
+scan_dom: true
+scan_blind: true
+scan_json: true
+scan_websocket: false
+scan_graphql: false
+scan_ssti: false
+
+# =========================
+# CRAWLING SETTINGS
+# =========================
+follow_redirects: true
+max_redirects: 5
+respect_robots: true
+crawl_same_domain: true
+crawl_subdomains: true
+crawl_external: false
+parse_sitemap: true
+use_wayback: false
+
+# =========================
+# BROWSER SETTINGS
+# =========================
+use_browser: true
+browser_type: "chrome"
+headless: true
+browser_timeout: 30
+browser_max_instances: 3
+
+# =========================
+# PAYLOAD SETTINGS
+# =========================
+payload_level: "advanced"
+max_payloads_per_param: 50
+use_evasion: true
+use_polyglot: true
+use_context_aware: true
+payload_intelligence: true
+custom_payload_file: null
+
+# =========================
+# DETECTION FEATURES
+# =========================
+detect_waf: true
+detect_csp: true
+detect_hsts: true
+detect_frameworks: true
+fingerprint_js: true
+analyze_js_ast: true
+detect_sinks: true
+detect_sources: true
+detect_trusted_types: true
+
+# =========================
+# VERIFICATION
+# =========================
+verify_reflected: true
+verify_stored: true
+verify_dom: true
+verification_method: "multi"
+max_verification_attempts: 3
+
+# =========================
+# OOB (OUT-OF-BAND)
+# =========================
+use_oob: true
+oob_server: "interact.sh"
+oob_domain: null
+oob_protocol: "http"
+
+# =========================
+# SECURITY CONTROLS
+# =========================
+verify_ssl: false
+user_agent_rotation: true
+proxy: null
+rate_limit: 0
+max_request_size: 10485760
+
+# =========================
+# OUTPUT SETTINGS
+# =========================
+output_dir: "reports"
+output_format: "both"
+verbose: true
+debug: false
+quiet: false
+color_output: true
+
+# =========================
+# ADVANCED FEATURES
+# =========================
+risk_assessment: true
+cvss_scoring: true
+generate_poc: true
+generate_exploit: false
+generate_curl: true
+generate_python: true
+chain_detection: true
+persistent_testing: false
+
+# =========================
+# DATABASE
+# =========================
+use_database: false
+db_path: "scans.db"
+
+# =========================
+# NOTIFICATIONS
+# =========================
+notify_on_critical: false
+webhook_url: null
